@@ -30,6 +30,10 @@ Product.init(
     category_id: {
       type: DataTypes.INTEGER,
       //foriegnKey goes here?
+      references: {
+        model: "category",
+        key: "id"
+      }
     }
   },
   {

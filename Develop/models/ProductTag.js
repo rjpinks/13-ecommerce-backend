@@ -10,16 +10,25 @@ ProductTag.init(
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
+    primaryKey: true
    },
     product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       //foriegn tag right here
+      references: {
+        model: "product",
+        references: "id"
+      }
     },
     tag_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       //foriegn tag would go here
+      references: {
+        model: "tag",
+        references: "id"
+      }
     }
   },
   {
