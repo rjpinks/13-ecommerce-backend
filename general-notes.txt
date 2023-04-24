@@ -18,10 +18,8 @@ The final animation shows the POST, PUT, and DELETE routes working.
 
 ------------------------------------------------------------------------
 
-Right now I need to be doing some stuff inn the index.js in the models i'm pretty sure.
+Okay, the database is seeded, and working. Unfortunately, the foriegn key stuff is not working properly.
+    -Fix this issue, and it's all kosher.
+    -Nevermind, they're working, but it's just one with a product_id that doesn't match. It doesn't really make sense it to have it at all though tbh.
 
-After I get the models working maybe look into the seeds to see that they're looking good.
-
-Next, I'll need to go into the routes and make sure all the routes are working.
-
-I think those are the main things, but it ain't gonna be that easy lbvs.
+I still have to go into the routes, and make sure user interaction works. This is what I'll need postman for.

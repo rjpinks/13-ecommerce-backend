@@ -13,7 +13,7 @@ Product.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     product_name: { 
       type: DataTypes.STRING,
@@ -33,8 +33,8 @@ Product.init(
       references: {
         model: "category",
         key: "id"
-      }
-    }
+      },
+    },
   },
   {
     sequelize,
