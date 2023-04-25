@@ -1,28 +1,113 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
+const sequelize = require("../../config/connection");
+const { update } = require('../../models/Product');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all categories
   // be sure to include its associated Products
+  try {
+    const allCategories = await Category.findAll({
+      include: [{ model: Product }],
+      attributes: {
+        include: [
+          [
+            sequelize.literal(
+              "(SELECT * FROM product WHERE product.category_id = category.id)" /* This is most probably not wrong */
+            ),
+            "associatedProducts"
+          ]
+        ]
+      }
+     });
+    res.status(200).json(allCategories);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
+  try {
+    const oneCategory = await Driver.findByPk(req.params.id, {
+      include: [{ model: Product }],
+      attributes: {
+        include: [
+          [
+            // Use plain SQL to add up the total mileage
+            sequelize.literal(
+              '(SELECT * FROM product WHERE product.category_id = category.id)'
+            ),
+            'associatedProducts',
+          ],
+        ],
+      },
+    });
+
+    if (!oneCategory) {
+      res.status(404).json({ message: "It's over for me!" });
+      return;
+    }
+
+    res.status(200).json(oneCategory);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new category
+  try {
+    const newCategory = await Category.create({
+      category_name: req.body.category_name,
+    });
+    res.status(200).json(newCategory);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
+  try {
+    const updateCat = await Category.update({
+      where: {
+        id: req.params.id,
+      }
+    });
+
+    if (!updateCat) {
+      res.status(404).json({ message: "This is gonna make me cry..." });
+      return;
+    }
+
+    res.status(200).json(updateCat);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
+  try {
+    const catDeleteCall = await Category.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!catDeleteCall) {
+      res.status(404).json({ message: 'Oh no..... it happened again...' });
+      return;
+    }
+
+    res.status(200).json(catDeleteCall);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
