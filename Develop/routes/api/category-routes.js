@@ -9,20 +9,11 @@ router.get('/', async (req, res) => {
   // find all categories
   // be sure to include its associated Products
   try {
-    const allCategories = await Category.findAll({
-      include: [{ model: Product }],
-      attributes: {
-        include: [
-          [
-            sequelize.literal(
-              "(SELECT * FROM product WHERE product.category_id = category.id)" /* This is most probably not wrong */
-            ),
-            "associatedProducts"
-          ]
-        ]
-      }
-     });
-    res.status(200).json(allCategories);
+  sequelize.query("SELECT category.*, product.product_name FROM category INNER JOIN product ON category.id = product.category_id;")
+    .then(results => {
+      res.status(200).json(results)
+    })
+
   } catch (err) {
     res.status(500).json(err);
   }
@@ -39,7 +30,7 @@ router.get('/:id', async (req, res) => {
           [
             // Use plain SQL to add up the total mileage
             sequelize.literal(
-              '(SELECT * FROM product WHERE product.category_id = category.id)'
+              'SELECT category.*, product.product_name FROM category INNER JOIN product ON category.id = product.category_id;'
             ),
             'associatedProducts',
           ],
