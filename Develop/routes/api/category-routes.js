@@ -23,27 +23,16 @@ router.get('/:id', async (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
   try {
-    const oneCategory = await Driver.findByPk(req.params.id, {
-      include: [{ model: Product }],
-      attributes: {
-        include: [
-          [
-            // Use plain SQL to add up the total mileage
-            sequelize.literal(
-              'SELECT category.*, product.product_name FROM category INNER JOIN product ON category.id = product.category_id;'
-            ),
-            'associatedProducts',
-          ],
-        ],
-      },
-    });
+    const oneCategory = sequelize.query(`SELECT category.*, product.product_name FROM category INNER JOIN product ON category.id = product.category_id WHERE category.id = '${req.params.id}';`)
+      .then(results => {
+        res.status(200).json(results)
+      })
 
     if (!oneCategory) {
-      res.status(404).json({ message: "It's over for me!" });
+      res.status(404).json({ message: "Sorry, we didn't find an entry with that id" });
       return;
     }
-
-    res.status(200).json(oneCategory);
+    
   } catch (err) {
     res.status(500).json(err);
   }
@@ -64,11 +53,12 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   // update a category by its `id` value
   try {
-    const updateCat = await Category.update({
-      where: {
-        id: req.params.id,
-      }
-    });
+    console.log(req.body.category_name)
+    const urlId = req.params.id
+    const updateCat = await Category.update(
+      { category_name: req.body.category_name },
+      { where: { id: urlId } }
+    )
 
     if (!updateCat) {
       res.status(404).json({ message: "This is gonna make me cry..." });
