@@ -12,7 +12,7 @@ Sequelize, MySQL2, dotenv, and express.
 
 Upon starting the app, it should sync the database. Use the appropriate routes found in the routes directory to manipulate the database with CRUD.
 
-<!-- ![Link to walkthrough will go here]() -->
+[Link to Youtube Demonstration](https://www.youtube.com/watch?v=kHsmDWrRRJs)
 
 ## Credits
 

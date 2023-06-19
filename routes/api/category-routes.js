@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
     const getOneCat = await Category.findByPk(req.params.id);
     res.status(200).json(getOneCat);
 
-    if (!oneCategory) {
+    if (!getOneCat) {
       res.status(404).json({ message: "Sorry, we didn't find an entry with that id" });
       return;
     }
